@@ -59,6 +59,19 @@ export default {
         })
     })
   },
+    // eslint-disable-next-line no-unused-vars
+    beforeRouteEnter(routeTo,RouteFrom,next){
+      EventService.getEvents(2, parseInt(routeTo.query.page||1))
+        .then((response) => {
+          next((comp)=>{
+            comp.events=response.data
+            comp.totalEvents=response.headers['x-total-count']
+          })
+        })
+        .catch(() => {
+          next({name:'NetworkError'})
+        })
+    },
   computed: {
     hasNextPage() {
       // First, calculate total pages
